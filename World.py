@@ -19,7 +19,7 @@ score = 1
 restart = False
 walk_reward = -0.04
 
-walls = [(1, 1), (1, 2), (2, 1), (2, 2),(3,3),(0,4)]
+walls = [[1, 1], [1, 2], [2, 1], [2, 2],[3,3],[0,4],[4,3]]
 specials = [(4, 1, "red", -1), (4, 0, "green", 1)]
 cell_scores = {}
 
@@ -58,7 +58,7 @@ def render_grid():
             cell_scores[(i,j)] = temp
     for (i, j, c, w) in specials:
         board.create_rectangle(i*Width, j*Width, (i+1)*Width, (j+1)*Width, fill=c, width=1)
-    for (i, j) in walls:
+    for [i, j] in walls:
         board.create_rectangle(i*Width, j*Width, (i+1)*Width, (j+1)*Width, fill="black", width=1)
 
 render_grid()
@@ -85,20 +85,23 @@ def try_move(dx, dy):
     new_x = player[0] + dx
     new_y = player[1] + dy
     score += walk_reward
-    if (new_x >= 0) and (new_x < x) and (new_y >= 0) and (new_y < y) and not ((new_x, new_y) in walls):
+    if (new_x >= 0) and (new_x < x) and (new_y >= 0) and (new_y < y) and not ([new_x, new_y] in walls):
         board.coords(me, new_x*Width+Width*2/10, new_y*Width+Width*2/10, new_x*Width+Width*8/10, new_y*Width+Width*8/10)
         player = (new_x, new_y)
+    status="white"
     for (i, j, c, w) in specials:
         if new_x == i and new_y == j:
             score -= walk_reward
             score += w
-            if score > 0:
-                print ("Success! score: ", score)
-            else:
-                print ("Fail! score: ", score)
+            #if score > 0:
+            #    print ("Success! score: {} {}".format( score,c))
+            #else:
+            #    print ("Fail! score: {} {}".format( score,c))
             restart = True
-            return
-    #print "score: ", score
+            status=c
+            break
+            #return c
+    return status#print "score: ", score
 
 
 def call_up(event):

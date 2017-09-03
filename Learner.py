@@ -1,9 +1,9 @@
 __author__ = 'philippe'
-import BigWorld as World
+import World as World
 import threading
 import time
 
-runSleep=False
+runSleep=True
 discount = 0.3
 actions = World.actions
 states = []
